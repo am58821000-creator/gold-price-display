@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>سعر الذهب - دار السبائك</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial; text-align: center; background:#111; color:#fff; padding-top:60px; }
+    h1 { color: gold; }
+    #price { font-size:48px; margin-top:20px; color:#00ffcc; }
+    #time { margin-top:15px; font-size:14px; color:#aaa; }
+  </style>
+</head>
+<body>
+
+  <h1>سعر ذهب 24 قيراط</h1>
+  <div id="price">جاري تحميل السعر...</div>
+  <div id="time"></div>
+
+  <script>
+    async function loadPrice() {
+      try {
+        const res = await fetch("/api/price");
+        const data = await res.json();
+        document.getElementById("price").innerText = data.price + " د.ك";
+        document.getElementById("time").innerText =
+          "آخر تحديث: " + new Date().toLocaleTimeString();
+      } catch (e) {
+        document.getElementById("price").innerText = "تعذر جلب السعر";
+      }
+    }
+    loadPrice();
+    setInterval(loadPrice, 60000);
+  </script>
+
+</body>
+</html>
