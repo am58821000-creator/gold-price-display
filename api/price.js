@@ -1,32 +1,27 @@
 export default async function handler(req, res) {
   try {
-    // 1️⃣ جلب الأسعار العالمية بالدولار
-    const response = await fetch("https://data-asg.goldprice.org/dbXRates/USD");
-    const data = await response.json();
-    const goldOunce = data.items[0].xauPrice;      // الذهب بالأونصة
-    const silverOunce = data.items[0].xagPrice;    // الفضة بالأونصة
-    const platinumOunce = data.items[0].xptPrice;  // البلاتينيوم بالأونصة
+    const gold24 = 39.62;
+    const gold22 = 36.32;
+    const gold21 = 34.67;
+    const gold18 = 29.71;
+    const silver = 0.24;
+    const platinum = 10.12;
 
-    // 2️⃣ تحويل الأونصة للجرام
-    const goldGramUSD = goldOunce / 31.1035;
-    const silverGramUSD = silverOunce / 31.1035;
-    const platinumGramUSD = platinumOunce / 31.1035;
-
-    // 3️⃣ سعر الصرف من الدولار للدينار الكويتي (تقدر تعدّل حسب البنك)
-    const usdToKwd = 0.31; // تقريبياً 1 USD = 0.31 KWD
-
-    // 4️⃣ التحويل للجرام بالدينار الكويتي
-    const goldGramKWD = (goldGramUSD * usdToKwd).toFixed(3);
-    const silverGramKWD = (silverGramUSD * usdToKwd).toFixed(3);
-    const platinumGramKWD = (platinumGramUSD * usdToKwd).toFixed(3);
+    function buySell(price){
+      const buy = price;
+      const sell = (price * 1.02).toFixed(3);
+      return { buy: buy.toFixed(3), sell };
+    }
 
     res.status(200).json({
-      gold: goldGramKWD,
-      silver: silverGramKWD,
-      platinum: platinumGramKWD
+      gold24: buySell(gold24),
+      gold22: buySell(gold22),
+      gold21: buySell(gold21),
+      gold18: buySell(gold18),
+      silver: buySell(silver),
+      platinum: buySell(platinum)
     });
-
-  } catch (error) {
+  } catch(err) {
     res.status(500).json({ error: "Failed to fetch prices" });
   }
 }
